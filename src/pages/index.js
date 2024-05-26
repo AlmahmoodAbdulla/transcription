@@ -5,7 +5,6 @@ import { Button, TextField, Container, Box, Typography, Paper, CircularProgress 
 import { styled } from '@mui/material/styles';
 import { useState, useEffect } from 'react';
 
-export const runtime = "edge"
 
 const fetcher = url => axios.get(url).then(res => res.data);
 
