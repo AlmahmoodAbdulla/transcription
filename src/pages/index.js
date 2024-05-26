@@ -53,7 +53,11 @@ export default function Home() {
   };
 
   if (error) return <Typography variant="h6" color="error">Failed to load: {error}</Typography>;
-  if (!data) return <CircularProgress color="primary" />;
+  if (!data) return (
+    <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+      <CircularProgress color="primary" />
+    </Box>
+  );
 
   return (
     <Container maxWidth="sm" sx={{ pt: 3, pb: 3}}>
@@ -83,7 +87,7 @@ export default function Home() {
           rows={2}
           variant="outlined"
           margin="normal"
-          inputProps={{ style: { direction: 'rtl' } }}
+          inputProps={{ style: { direction: 'rtl', backgroundColor: 'white' } }}
         />
         <Box textAlign="center" marginTop={2}>
           <Button fullWidth type="submit" variant="contained" color="primary" size="large">
