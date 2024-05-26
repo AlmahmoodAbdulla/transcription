@@ -19,7 +19,7 @@ export default async function handler(req, res) {
         const { id, transcription } = req.body;
         const response = await db.query('select * from stt_transcripts.transcripts t where id=$1', [id]);
         const file = response.rows[0];
-        await db.query('UPDATE stt_transcripts.transcripts SET transcription = $1, old_transcription = to_jsonb($3::text) WHERE id = $2', [transcription, id, file.transcription]);
+        await db.query('UPDATE stt_transcripts.transcripts SET transcription = $1, old_transcription = to_jsonb($3::text), update_date = now() WHERE id = $2', [transcription, id, file.transcription]);
         res.status(200).json({ message: 'Transcription updated successfully.' });
     } else {
         res.setHeader('Allow', ['GET', 'POST']);
