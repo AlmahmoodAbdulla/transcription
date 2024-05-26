@@ -61,7 +61,7 @@ export default function Home() {
         Audio id: {data.id}
       </Typography>
       <Typography variant="h5" gutterBottom align="center">
-        File Name: {data.file_name}
+        {data.file_name}
       </Typography>
       <StyledAudioContainer>
         <audio 
