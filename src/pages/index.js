@@ -108,14 +108,11 @@ export default function Home() {
   );
 
   return (
-    <Container maxWidth="sm" sx={{ pt: 3, pb: 3, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100vh' }}>
-      <Typography variant="h6" gutterBottom align="center" sx={{ flexGrow: 0 }}>
-        Audio id: {data?.id}
-      </Typography>
-      <Typography variant="h6" gutterBottom align="center" sx={{ flexGrow: 0 }}>
+    <Container maxWidth="sm" sx={{ pt: 3, pb: 3, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '95vh' }}>
+      <Typography variant="h6" gutterBottom align="center" sx={{}}>
         {data?.file_name}
       </Typography>
-      <StyledAudioContainer sx={{ flexGrow: 1 }}>
+      <StyledAudioContainer sx={{ flexGrow: 0 }}>
         <audio
           controls
           autoPlay
@@ -126,7 +123,7 @@ export default function Home() {
           onError={reloadAudio}  // Handle audio load error
         />
       </StyledAudioContainer>
-      <form onSubmit={handleSubmit(onSubmit)} sx={{ flexGrow: 5 }}>
+      <form onSubmit={handleSubmit(onSubmit)} sx={{ flexGrow: 1 }}>
         <TextField
           fullWidth
           label="Transcription"
