@@ -160,7 +160,7 @@ export default function Home() {
           Total Transcribed: <strong>{statData?.stat_data.total_transcribed}</strong>
         </Typography>
         <Typography variant="h6" gutterBottom component="div" sx={{ fontFamily: '"Courier New", monospace' }}>
-          Remaining Transcriptions: <strong>{statData?.stat_data.remaining_transcriptions}</strong>
+          Total Remaining: <strong>{statData?.stat_data.remaining_transcriptions}</strong>
         </Typography>
       </StatsPaper>
       <Dialog
