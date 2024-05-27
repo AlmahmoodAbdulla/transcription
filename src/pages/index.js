@@ -7,12 +7,6 @@ import { useEffect, useState } from 'react';
 
 const fetcher = url => axios.get(url).then(res => res.data);
 
-// const StyledAudioContainer = styled(Paper)(({ theme }) => ({
-//   padding: theme.spacing(2),
-//   margin: theme.spacing(2, 0),
-//   backgroundColor: '#f5f5f5'  // A light grey background
-// }));
-
 const StatsPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   margin: theme.spacing(3, 0),
@@ -40,7 +34,18 @@ const StyledAudioContainer = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Home() {
-  const { data, mutate, error } = useSWR('/api/audio', fetcher, { revalidateOnFocus: false });
+  const [nextData, setNextData] = useState(null); // State to hold the prefetched data
+  const { data, mutate, error } = useSWR('/api/audio', fetcher, {
+    revalidateOnFocus: false, onSuccess: (data) => {
+      // Pre-fetch the next audio immediately after loading the current one
+      fetchNextAudio();
+    }
+  });
+
+  const fetchNextAudio = async () => {
+    const nextAudioData = await fetcher('/api/audio');
+    setNextData(nextAudioData);
+  };
   const { data: statData, mutate: mutateStat, error: statError } = useSWR('/api/stats', fetcher);
   const { register, handleSubmit, reset, setValue } = useForm();
   const [audioKey, setAudioKey] = useState(0);  // Used to force re-render the audio component on error
@@ -54,8 +59,9 @@ export default function Home() {
 
   const onSubmit = async (formData) => {
     await axios.post('/api/audio', { id: data.id, transcription: formData.transcription });
-    mutate();
+    mutate(nextData, false);
     mutateStat();
+    fetchNextAudio();
     reset({ transcription: '' });
   };
 
@@ -64,14 +70,16 @@ export default function Home() {
   };
 
   const skipAudio = () => {
-    mutate();
+    mutate(nextData, false);
     mutateStat();
+    fetchNextAudio();
   };
 
   const deleteAudio = () => {
     axios.post('/api/deleteAudio', { id: data.id });
-    mutate();
+    mutate(nextData, false);
     mutateStat();
+    fetchNextAudio();
     setOpen(false);
   }
 
