@@ -138,14 +138,14 @@ export default function Home() {
           inputProps={{ style: { direction: 'rtl', backgroundColor: 'white', fontSize: '20px' } }}
         />
         <Box display="flex" justifyContent="space-between" mt={2}>
-          <Button type="submit" variant="contained" color="primary" size="large" sx={{ flex: 1, mr: 1 }}>
-            Save
+          <Button onClick={openDialog} variant="contained" color="error" size="large" sx={{ flex: 1, mr: 1 }}>
+            Delete
           </Button>
           <Button onClick={skipAudio} variant="contained" color="secondary" size="large" sx={{ flex: 1, mr: 1 }}>
             Skip
           </Button>
-          <Button onClick={openDialog} variant="contained" color="error" size="large" sx={{ flex: 1, mr: 1 }}>
-            Delete
+          <Button type="submit" variant="contained" color="primary" size="large" sx={{ flex: 1, mr: 1 }}>
+            Save
           </Button>
         </Box>
       </form>
