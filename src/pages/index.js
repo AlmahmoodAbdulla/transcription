@@ -92,10 +92,10 @@ export default function Home() {
 
   return (
     <Container maxWidth="sm" sx={{ pt: 3, pb: 3 }}>
-      <Typography variant="h5" gutterBottom align="center">
+      <Typography variant="h6" gutterBottom align="center">
         Audio id: {data?.id}
       </Typography>
-      <Typography variant="h5" gutterBottom align="center">
+      <Typography variant="h6" gutterBottom align="center">
         {data?.file_name}
       </Typography>
       <StyledAudioContainer>
