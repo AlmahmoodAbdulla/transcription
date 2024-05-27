@@ -17,7 +17,8 @@ const StatsPaper = styled(Paper)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'start',
   justifyContent: 'center',
-  flexGrow: 1, // Added this line
+  flexGrow: 1,
+  fontFamily: '"Courier New", monospace'
 }));
 
 const StyledAudioContainer = styled(Paper)(({ theme }) => ({
@@ -109,7 +110,7 @@ export default function Home() {
 
   return (
     <Container maxWidth="sm" sx={{ pt: 3, pb: 3, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '95vh' }}>
-      <Typography variant="h6" gutterBottom align="center" sx={{}}>
+      <Typography variant="h6" gutterBottom align="center" sx={{ fontFamily: '"Courier New", monospace' }}>
         {data?.file_name}
       </Typography>
       <StyledAudioContainer sx={{ flexGrow: 0 }}>
@@ -129,10 +130,10 @@ export default function Home() {
           label="Transcription"
           {...register('transcription')}
           multiline
-          rows={2}
+          rows={4}
           variant="outlined"
           margin="normal"
-          inputProps={{ style: { direction: 'rtl', backgroundColor: 'white', fontSize: '20px' } }}
+          inputProps={{ style: { direction: 'rtl', backgroundColor: 'white', fontSize: '20px', fontFamily: 'Noto Sans Arabic, sans-serif' } }}
         />
         <Box display="flex" justifyContent="space-between" mt={2}>
           <Button onClick={openDialog} variant="contained" color="error" size="large" sx={{ flex: 1, mr: 1 }}>
@@ -152,13 +153,13 @@ export default function Home() {
         </Backdrop>
       )}
       <StatsPaper elevation={3} sx={{ flexGrow: 0 }}>
-        <Typography variant="h6" gutterBottom component="div">
+        <Typography variant="h6" gutterBottom component="div" sx={{ fontFamily: '"Courier New", monospace' }}>
           Total Transcribed Today: <strong>{statData?.stat_data.todays_transcriptions}</strong>
         </Typography>
-        <Typography variant="h6" gutterBottom component="div">
+        <Typography variant="h6" gutterBottom component="div" sx={{ fontFamily: '"Courier New", monospace' }}>
           Total Transcribed: <strong>{statData?.stat_data.total_transcribed}</strong>
         </Typography>
-        <Typography variant="h6" gutterBottom component="div">
+        <Typography variant="h6" gutterBottom component="div" sx={{ fontFamily: '"Courier New", monospace' }}>
           Remaining Transcriptions: <strong>{statData?.stat_data.remaining_transcriptions}</strong>
         </Typography>
       </StatsPaper>
