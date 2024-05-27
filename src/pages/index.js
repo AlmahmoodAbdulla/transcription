@@ -101,7 +101,7 @@ export default function Home() {
     setOpen(false);
   };
 
-  if (error) return <Typography variant="h6" color="error">Failed to load: {error}</Typography>;
+  if (error) return <Typography variant="body2" color="error">Failed to load: {error}</Typography>;
   if (!data) return (
     <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
       <CircularProgress color="primary" />
