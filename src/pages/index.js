@@ -22,6 +22,8 @@ const StatsPaper = React.memo(({ stats }) => (
   </Paper>
 ));
 
+StatsPaper.displayName = 'StatsPaper';
+
 const StyledAudioContainer = React.memo(styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   margin: theme.spacing(1, 0),
@@ -36,6 +38,9 @@ const StyledAudioContainer = React.memo(styled(Paper)(({ theme }) => ({
     margin: theme.spacing(1, 0),
   }
 })));
+
+StyledAudioContainer.displayName = 'StyledAudioContainer';
+
 
 export default function Home() {
   const [nextData, setNextData] = useState(null); // State to hold the prefetched data
