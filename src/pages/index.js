@@ -4,24 +4,25 @@ import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, TextField, Container, Box, Typography, Paper, CircularProgress, Backdrop, Snackbar, Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
+import React from 'react'
 
 const fetcher = url => axios.get(url).then(res => res.data);
 
 const StatsPaper = React.memo(({ stats }) => (
   <Paper>
     <Typography variant="h6">
-      Total Transcribed Today: <strong>{stats.todays_transcriptions}</strong>
+      Total Transcribed Today: <strong>{stats?.todays_transcriptions}</strong>
     </Typography>
     <Typography variant="h6">
-      Total Transcribed: <strong>{stats.total_transcribed}</strong>
+      Total Transcribed: <strong>{stats?.total_transcribed}</strong>
     </Typography>
     <Typography variant="h6">
-      Total Remaining: <strong>{stats.remaining_transcriptions}</strong>
+      Total Remaining: <strong>{stats?.remaining_transcriptions}</strong>
     </Typography>
   </Paper>
 ));
 
-const StyledAudioContainer = styled(Paper)(({ theme }) => ({
+const StyledAudioContainer = React.memo(styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   margin: theme.spacing(1, 0),
   display: 'flex',
@@ -29,12 +30,12 @@ const StyledAudioContainer = styled(Paper)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: 'transparent',
-  flexGrow: 1, // Added this line
+  flexGrow: 1,
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(0.5),
     margin: theme.spacing(1, 0),
   }
-}));
+})));
 
 export default function Home() {
   const [nextData, setNextData] = useState(null); // State to hold the prefetched data
@@ -175,7 +176,7 @@ export default function Home() {
           <CircularProgress color="inherit" />
         </Backdrop>
       )}
-      <StatsPaper elevation={3} sx={{ flexGrow: 0 }}>
+      {/* <StatsPaper elevation={3} sx={{ flexGrow: 0 }}>
         <Typography variant="h6" gutterBottom component="div" sx={{ fontFamily: '"Courier New", monospace' }}>
           Total Transcribed Today: <strong>{statData?.stat_data.todays_transcriptions}</strong>
         </Typography>
@@ -185,7 +186,7 @@ export default function Home() {
         <Typography variant="h6" gutterBottom component="div" sx={{ fontFamily: '"Courier New", monospace' }}>
           Total Remaining: <strong>{statData?.stat_data.remaining_transcriptions}</strong>
         </Typography>
-      </StatsPaper>
+      </StatsPaper> */}
       <StatsPaper stats={statData?.stat_data} elevation={3} sx={{ flexGrow: 0 }} />
       <Dialog
         open={open}
