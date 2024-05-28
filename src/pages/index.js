@@ -4,24 +4,25 @@ import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, TextField, Container, Box, Typography, Paper, CircularProgress, Backdrop, Snackbar, Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
+import React from 'react';
 
 const fetcher = url => axios.get(url).then(res => res.data);
 
-const StatsPaper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
-  margin: theme.spacing(1, 0),
-  backgroundColor: theme.palette.background.paper,
-  boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.05)',
-  borderRadius: '12px',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'start',
-  justifyContent: 'center',
-  flexGrow: 1,
-  fontFamily: '"Courier New", monospace'
-}));
+const StatsPaper = React.memo(({ stats }) => (
+  <Paper>
+    <Typography variant="h6">
+      Total Transcribed Today: <strong>{stats.todays_transcriptions}</strong>
+    </Typography>
+    <Typography variant="h6">
+      Total Transcribed: <strong>{stats.total_transcribed}</strong>
+    </Typography>
+    <Typography variant="h6">
+      Total Remaining: <strong>{stats.remaining_transcriptions}</strong>
+    </Typography>
+  </Paper>
+));
 
-const StyledAudioContainer = styled(Paper)(({ theme }) => ({
+const StyledAudioContainer = React.memo(styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   margin: theme.spacing(1, 0),
   display: 'flex',
@@ -29,12 +30,12 @@ const StyledAudioContainer = styled(Paper)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: 'transparent',
-  flexGrow: 1, // Added this line
+  flexGrow: 1,
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(0.5),
     margin: theme.spacing(1, 0),
   }
-}));
+})));
 
 export default function Home() {
   const [nextData, setNextData] = useState(null); // State to hold the prefetched data
