@@ -1,7 +1,7 @@
 import useSWR, { mutate as globalMutate } from 'swr';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, TextField, Container, Box, Typography, Paper, CircularProgress, Backdrop } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, TextField, Container, Box, Typography, Paper, CircularProgress, Backdrop, Snackbar, Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 
@@ -54,7 +54,11 @@ export default function Home() {
   const [audioKey, setAudioKey] = useState(0);  // Used to force re-render the audio component on error
   const [open, setOpen] = useState(false);  // Dialog open state
   const [loading, setLoading] = useState(false);
-  console.log("Stat data: ", statData)
+  const [previousId, setPreviousId] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar state
+  const [snackbarMessage, setSnackbarMessage] = useState(''); // Snackbar message
+
+  // console.log("Stat data: ", statData)
   useEffect(() => {
     if (data && data.transcription) {
       setValue('transcription', data.transcription);
@@ -64,6 +68,7 @@ export default function Home() {
   const onSubmit = async (formData) => {
     setLoading(true);
     try {
+      setPreviousId(data.id)
       await axios.post('/api/audio', { id: data.id, transcription: formData.transcription });
       mutate(nextData, false);
       mutateStat();
@@ -99,6 +104,21 @@ export default function Home() {
 
   const closeDialog = () => {
     setOpen(false);
+  };
+
+  const undoTranscription = async () => {
+    if (previousId) {
+      setLoading(true);
+      try {
+        const response = await axios.post('/api/undo', { id: previousId });
+
+        // Show Snackbar notification with actual transcriptions
+        setSnackbarMessage(`Transcription was restored to "${response.data.oldTranscription}" and the audio was restored to the pool.`);
+        setSnackbarOpen(true);
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   if (error) return <Typography variant="body2" color="error">Failed to load: {error}</Typography>;
@@ -142,6 +162,9 @@ export default function Home() {
           <Button onClick={skipAudio} variant="contained" color="secondary" size="large" sx={{ flex: 1, mr: 1 }}>
             Skip
           </Button>
+          <Button onClick={undoTranscription} variant="contained" color="warning" size="large" sx={{ flex: 1, mr: 1 }}>
+            Undo
+          </Button>
           <Button type="submit" variant="contained" color="primary" size="large" sx={{ flex: 1, mr: 1 }}>
             Save
           </Button>
@@ -184,6 +207,16 @@ export default function Home() {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }

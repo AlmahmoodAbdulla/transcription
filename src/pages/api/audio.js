@@ -13,7 +13,7 @@ export default async function handler(req, res) {
         });
         res.status(200).json({ file: signedUrl, transcription: file.transcription, id: file.id, remaining_transcriptions: file.remaining_transcriptions, file_name: file.file_name });
     } else if (req.method === 'POST') {
-        console.log("\nReq Data", req.body)
+        // console.log("\nReq Data", req.body)
         const { id, transcription } = req.body;
         const response = await db.query('select * from stt_transcripts.transcripts t where id=$1', [id]);
         const file = response.rows[0];
