@@ -7,19 +7,19 @@ import { useEffect, useState } from 'react';
 
 const fetcher = url => axios.get(url).then(res => res.data);
 
-const StatsPaper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
-  margin: theme.spacing(1, 0),
-  backgroundColor: theme.palette.background.paper,
-  boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.05)',
-  borderRadius: '12px',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'start',
-  justifyContent: 'center',
-  flexGrow: 1,
-  fontFamily: '"Courier New", monospace'
-}));
+const StatsPaper = React.memo(({ stats }) => (
+  <Paper>
+    <Typography variant="h6">
+      Total Transcribed Today: <strong>{stats.todays_transcriptions}</strong>
+    </Typography>
+    <Typography variant="h6">
+      Total Transcribed: <strong>{stats.total_transcribed}</strong>
+    </Typography>
+    <Typography variant="h6">
+      Total Remaining: <strong>{stats.remaining_transcriptions}</strong>
+    </Typography>
+  </Paper>
+));
 
 const StyledAudioContainer = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -186,6 +186,7 @@ export default function Home() {
           Total Remaining: <strong>{statData?.stat_data.remaining_transcriptions}</strong>
         </Typography>
       </StatsPaper>
+      <StatsPaper stats={statData?.stat_data} elevation={3} sx={{ flexGrow: 0 }} />
       <Dialog
         open={open}
         onClose={closeDialog}
