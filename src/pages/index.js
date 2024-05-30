@@ -1,4 +1,4 @@
-import useSWR, { mutate as globalMutate } from 'swr';
+import useSWR from 'swr';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, TextField, Container, Box, Typography, Paper, CircularProgress, Backdrop, Snackbar, Alert } from '@mui/material';
@@ -63,6 +63,7 @@ export default function Home() {
   const [previousId, setPreviousId] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar state
   const [snackbarMessage, setSnackbarMessage] = useState(''); // Snackbar message
+  const [snackbarSeverity, setSnackbarSeverity] = useState(null)
 
   // console.log("Stat data: ", statData)
   useEffect(() => {
@@ -116,14 +117,26 @@ export default function Home() {
     if (previousId) {
       setLoading(true);
       try {
+        console.log("Undoing... id: ", previousId)
         const response = await axios.post('/api/undo', { id: previousId });
-
-        // Show Snackbar notification with actual transcriptions
-        setSnackbarMessage(`Transcription was restored to "${response.data.oldTranscription}" and the audio was restored to the pool.`);
+        const previousData = await axios.get('/api/audio', { params: { id: previousId } });
+        mutate(previousData.data, false);
+        mutateStat();
+        fetchNextAudio();
+        setSnackbarMessage(`Transcription was restored to: ${response.data.oldTranscription}`);
+        setSnackbarSeverity('success')
+        setSnackbarOpen(true);
+      } catch (error) {
+        setSnackbarMessage(error.response.data.message)
+        setSnackbarSeverity('error')
         setSnackbarOpen(true);
       } finally {
         setLoading(false);
       }
+    } else {
+      setSnackbarMessage("No Previous data was found to undo.")
+      setSnackbarSeverity('error')
+      setSnackbarOpen(true);
     }
   };
 
@@ -220,7 +233,7 @@ export default function Home() {
         onClose={() => setSnackbarOpen(false)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: '100%' }}>
+        <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>

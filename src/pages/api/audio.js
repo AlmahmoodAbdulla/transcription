@@ -4,14 +4,25 @@ import db from '../../utils/database';
 export default async function handler(req, res) {
     // console.log("S3 \n", s3)
     if (req.method === 'GET') {
-        const response = await db.query("select * from stt_transcripts.transcripts t where old_transcription is null and deleted = false ORDER BY random() limit 1");
-        const file = response.rows[0];
-        const signedUrl = s3.getSignedUrl('getObject', {
-            Bucket: 'transcriptionaudioclips',
-            Key: file.file_name.trim(),
-            Expires: 300 // Link expiration (seconds)
-        });
-        res.status(200).json({ file: signedUrl, transcription: file.transcription, id: file.id, remaining_transcriptions: file.remaining_transcriptions, file_name: file.file_name });
+        if (req.query.id == undefined) {
+            const response = await db.query("select * from stt_transcripts.transcripts t where old_transcription is null and deleted = false ORDER BY random() limit 1");
+            const file = response.rows[0];
+            const signedUrl = s3.getSignedUrl('getObject', {
+                Bucket: 'transcriptionaudioclips',
+                Key: file.file_name.trim(),
+                Expires: 300 // Link expiration (seconds)
+            });
+            res.status(200).json({ file: signedUrl, transcription: file.transcription, id: file.id, remaining_transcriptions: file.remaining_transcriptions, file_name: file.file_name });
+        } else {
+            const response = await db.query('select * from stt_transcripts.transcripts t where id=$1', [req.query.id]);
+            const file = response.rows[0];
+            const signedUrl = s3.getSignedUrl('getObject', {
+                Bucket: 'transcriptionaudioclips',
+                Key: file.file_name.trim(),
+                Expires: 300 // Link expiration (seconds)
+            });
+            res.status(200).json({ file: signedUrl, transcription: file.transcription, id: file.id, remaining_transcriptions: file.remaining_transcriptions, file_name: file.file_name });
+        }
     } else if (req.method === 'POST') {
         // console.log("\nReq Data", req.body)
         const { id, transcription } = req.body;
